@@ -1384,16 +1384,18 @@ public class CliGitAPIImpl extends LegacyCompatibleGitAPIImpl {
         // or maybe someone pushed directly to the workspace and so it may not correspond to any remote branch.
         // so if we fail to figure this out, we back out and avoid being too clever. See JENKINS-10060 as an example
         // of where our trying to be too clever here is breaking stuff for people.
-        for (Branch br : rev.getBranches()) {
-            String b = br.getName();
-            if (b != null) {
-                int slash = b.indexOf('/');
+        if (rev != null) {
+            for (Branch br : rev.getBranches()) {
+                String b = br.getName();
+                if (b != null) {
+                    int slash = b.indexOf('/');
 
-                if ( slash != -1 )
-                    remote = getDefaultRemote( b.substring(0,slash) );
+                    if (slash != -1)
+                        remote = getDefaultRemote(b.substring(0, slash));
+                }
+
+                if (remote != null) break;
             }
-
-            if (remote!=null)   break;
         }
 
         if (remote==null)
